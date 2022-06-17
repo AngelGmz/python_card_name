@@ -1,0 +1,78 @@
+from ursina import *
+from enum import Enum, auto
+
+
+
+class RoleWhite(Enum):
+    '''Dice roles.'''
+
+    WARRIOR = auto()
+    ROUGUE = auto()
+    MAGE = auto()
+    CLERIC = auto()
+    CHAMPION = auto()
+    SCROLL = auto()
+
+class Player():
+
+    def __init__(self) -> None:
+        self.dices = []
+        self.wite_dice: RoleWhite
+        self.points = 0
+        self.inventory = []
+
+
+    def show_dices(self):
+        for dice in self.dices:
+            dice.get_role()
+    
+    def append_random_dice(self, Dice):
+        self.dices.append(Dice)
+
+class Dice(Entity):
+    
+    def __init__(self, role) -> None:
+        super().__init__(parent = camera.ui, model='cube', color=color.orange, scale = (.1,.1))
+        self.role = role
+    
+    def get_role(self):
+        print("Role:", self.role )
+
+class Game():
+    '''Parametros del juego'''
+    def __init__(self) -> None:
+        self.dongeon_lv = 3
+    
+    def next_dungeon_lv(self):
+        self.dongeon_lv += 1
+
+
+app = Ursina()
+game = Game()
+roles_list = list([rol for rol in RoleWhite])
+player1 = Player()
+for i in range(game.dongeon_lv):
+    player1.append_random_dice( Dice( random.choice(roles_list) ) )
+player1.show_dices()
+game.next_dungeon_lv()
+
+bg = Entity(parent=camera.ui, model='quad', texture='shore', scale_x=camera.aspect_ratio, z=1)
+Cursor(texture='cursor', scale=.1)
+mouse.visible = False
+window.exit_button.visible = True
+window.fps_counter.enabled = False
+
+button = Button(text='Aumentar Nivel')
+
+def update():
+    for dice in player1.dices:
+        dice.rotation_x += 5 * time.dt
+        dice.rotation_y += 5 * time.dt
+        dice.rotation_z += 5 * time.dt
+
+
+#player = Entity ( parent = camera.ui, model='cube', color=color.orange, scale = (.1,.1))
+
+app.run()
+
+

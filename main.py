@@ -1,8 +1,18 @@
-from tkinter import W
 from turtle import update
 from ursina import *
+from enum import Enum, auto
 
+# white_dice = ['Guerrero', 'Ladrón', 'Mago', 'Clerigo', 'Campeón', 'Pergamino']
 
+class RoleWhite(Enum):
+    '''Dice roles.'''
+
+    WARRIOR = auto()
+    ROUGUE = auto()
+    MAGE = auto()
+    CLERIC = auto()
+    CHAMPION = auto()
+    SCROLL = auto()
 
 class Inventory(Entity):
     def __init__(self,position, **kwargs ):
@@ -17,13 +27,13 @@ class Inventory(Entity):
             color = color.color(0,0,.1,.9),
             w=7,
             h=1,
-            items_list = []
+            items_list = [],
+            roleWhite = RoleWhite
         )
 
         for key, value in kwargs.items():
             setattr(self, key, value)
-
-
+    
     def find_free_spot(self):
         for y in range(self.h):
             for x in range(self.w):
@@ -63,18 +73,18 @@ class Inventory(Entity):
             )
         name = item.replace('_', ' ').title()
 
-        if name == white_dice[0] or name ==  black_dice[0]:
+        if name == self.roleWhite.WARRIOR:
             icon.color = color.tint(color.red, -.5)
-            icon.text = 'W'
-        if name == white_dice[1] or name ==  black_dice[1]:
+            icon.texture = 'W'
+        if name == self.roleWhite.ROUGE:
             icon.color = color.green
-        if name == white_dice[2] or name ==  black_dice[2]:
+        if name == self.roleWhite.MAGE:
             icon.color = color.violet
-        if name == white_dice[3] or name ==  black_dice[3]:
+        if name == self.roleWhite.CLERIC:
             icon.color = color.white
-        if name == white_dice[4] or name ==  black_dice[4]:
+        if name == self.roleWhite.CHAMPION:
             icon.color = color.yellow
-        if name == white_dice[5] or name ==  black_dice[5]:
+        if name == self.roleWhite.SCROLL:
             icon.color = color.brown
        
         # if random.random() < .25:
@@ -130,7 +140,7 @@ if __name__ == '__main__':
     black_dice = ['Goblin', 'Cofre', 'Golem', 'Esqueleto', 'Dragon', 'Posion']
 
     def add_item():
-        inventory.append(random.choice(white_dice))
+        inventory.append(random.choice(RoleWhite))
     
     def remove_all_items():
         global dungeon
