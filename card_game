@@ -3,7 +3,7 @@ from enum import Enum, auto
 
 
 
-class RoleWhite(Enum):
+class DiceWhite(Enum):
     '''Dice roles.'''
 
     WARRIOR = auto()
@@ -13,11 +13,21 @@ class RoleWhite(Enum):
     CHAMPION = auto()
     SCROLL = auto()
 
-class Player():
+class DiceBlack(Enum):
+    '''Dice roles.'''
+
+    GOBLIN = auto()
+    CHEST = auto()
+    GOLEM = auto()
+    SQUELETON = auto()
+    DRAGON = auto()
+    POTION = auto()
+
+class Player(): 
 
     def __init__(self) -> None:
         self.dices = []
-        self.wite_dice: RoleWhite
+        self.wite_dice: DiceWhite
         self.points = 0
         self.inventory = []
 
@@ -31,8 +41,8 @@ class Player():
 
 class Dice(Entity):
     
-    def __init__(self, role) -> None:
-        super().__init__(parent = camera.ui, model='cube', color=color.orange, scale = (.1,.1))
+    def __init__(self, role, x, y) -> None:
+        super().__init__(parent = camera.ui, model='cube', color=color.orange, origin = (0,0) , scale = (.1,.1,.1), position=Vec2(x,y), texture='box')
         self.role = role
     
     def get_role(self):
@@ -49,10 +59,13 @@ class Game():
 
 app = Ursina()
 game = Game()
-roles_list = list([rol for rol in RoleWhite])
+roles_list = list([rol for rol in DiceWhite])
 player1 = Player()
+x = .1
+y = .2
 for i in range(game.dongeon_lv):
-    player1.append_random_dice( Dice( random.choice(roles_list) ) )
+    x += .2
+    player1.append_random_dice( Dice( random.choice(roles_list), x, y ) )
 player1.show_dices()
 game.next_dungeon_lv()
 
@@ -60,15 +73,24 @@ bg = Entity(parent=camera.ui, model='quad', texture='shore', scale_x=camera.aspe
 Cursor(texture='cursor', scale=.1)
 mouse.visible = False
 window.exit_button.visible = True
-window.fps_counter.enabled = False
+window.fps_counter.enabled = True
 
-button = Button(text='Aumentar Nivel')
+button = Button(text='Aumentar Nivel', scale=(.1,.1), )
+
+def agregar_dado():
+    player1.append_random_dice(Dice( random.choice(roles_list), x, y=.2) )
+
+button.on_click = agregar_dado
+
+vel_rotation = 50
 
 def update():
     for dice in player1.dices:
-        dice.rotation_x += 5 * time.dt
-        dice.rotation_y += 5 * time.dt
-        dice.rotation_z += 5 * time.dt
+        dice.rotation_x = 45
+        dice.rotation_z = 45
+        #dice.rotation_x += vel_rotation * time.dt
+        dice.rotation_y += vel_rotation * time.dt
+        #dice.rotation_z += vel_rotation * time.dt
 
 
 #player = Entity ( parent = camera.ui, model='cube', color=color.orange, scale = (.1,.1))
