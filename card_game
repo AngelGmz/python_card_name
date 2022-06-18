@@ -1,52 +1,10 @@
 from ursina import *
-from enum import Enum, auto
+from Player import Player
+from Dice import Dice
 
+white_dice = ['WARRIOR', 'ROUGE', 'MAGE', 'CLERIC', 'CHAMPION', 'SCROLL']
+black_dice = ['GOBLIN', 'CHEST', 'GOLEMS', 'SKELETON', 'DRAGON', 'POTION']
 
-
-class DiceWhite(Enum):
-    '''Dice roles.'''
-
-    WARRIOR = auto()
-    ROUGUE = auto()
-    MAGE = auto()
-    CLERIC = auto()
-    CHAMPION = auto()
-    SCROLL = auto()
-
-class DiceBlack(Enum):
-    '''Dice roles.'''
-
-    GOBLIN = auto()
-    CHEST = auto()
-    GOLEM = auto()
-    SQUELETON = auto()
-    DRAGON = auto()
-    POTION = auto()
-
-class Player(): 
-
-    def __init__(self) -> None:
-        self.dices = []
-        self.wite_dice: DiceWhite
-        self.points = 0
-        self.inventory = []
-
-
-    def show_dices(self):
-        for dice in self.dices:
-            dice.get_role()
-    
-    def append_random_dice(self, Dice):
-        self.dices.append(Dice)
-
-class Dice(Entity):
-    
-    def __init__(self, role, x, y) -> None:
-        super().__init__(parent = camera.ui, model='cube', color=color.orange, origin = (0,0) , scale = (.1,.1,.1), position=Vec2(x,y), texture='box')
-        self.role = role
-    
-    def get_role(self):
-        print("Role:", self.role )
 
 class Game():
     '''Parametros del juego'''
@@ -56,16 +14,14 @@ class Game():
     def next_dungeon_lv(self):
         self.dongeon_lv += 1
 
-
 app = Ursina()
 game = Game()
-roles_list = list([rol for rol in DiceWhite])
 player1 = Player()
 x = .1
 y = .2
 for i in range(game.dongeon_lv):
     x += .2
-    player1.append_random_dice( Dice( random.choice(roles_list), x, y ) )
+    player1.append_random_dice( Dice(x, y, white_dice) )
 player1.show_dices()
 game.next_dungeon_lv()
 
@@ -78,19 +34,23 @@ window.fps_counter.enabled = True
 button = Button(text='Aumentar Nivel', scale=(.1,.1), )
 
 def agregar_dado():
-    player1.append_random_dice(Dice( random.choice(roles_list), x, y=.2) )
+    player1.append_random_dice(Dice(x, .2, white_dice) )
 
 button.on_click = agregar_dado
 
 vel_rotation = 50
 
-def update():
+def rotar_dados():
     for dice in player1.dices:
         dice.rotation_x = 45
         dice.rotation_z = 45
         #dice.rotation_x += vel_rotation * time.dt
         dice.rotation_y += vel_rotation * time.dt
         #dice.rotation_z += vel_rotation * time.dt
+
+def update():
+    rotar_dados()
+       
 
 
 #player = Entity ( parent = camera.ui, model='cube', color=color.orange, scale = (.1,.1))
