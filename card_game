@@ -1,23 +1,16 @@
 from ursina import *
 from Player import Player
 from Dice import Dice
+from Game import Game
 
 white_dice = ['WARRIOR', 'ROUGE', 'MAGE', 'CLERIC', 'CHAMPION', 'SCROLL']
 black_dice = ['GOBLIN', 'CHEST', 'GOLEMS', 'SKELETON', 'DRAGON', 'POTION']
 
 
-class Game():
-    '''Parametros del juego'''
-    def __init__(self) -> None:
-        self.dongeon_lv = 3
-    
-    def next_dungeon_lv(self):
-        self.dongeon_lv += 1
-
 app = Ursina()
 game = Game()
 player1 = Player()
-x = .1
+x = 0
 y = .2
 for i in range(game.dongeon_lv):
     x += .2

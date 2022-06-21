@@ -4,6 +4,7 @@ class Player():
         self.dices = []
         self.points = 0
         self.inventory = []
+        self.turn =  False
 
 
     def show_dices(self):
