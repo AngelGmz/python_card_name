@@ -101,9 +101,22 @@ class Juego():
     for carta in mano:
       valores[carta.numero] += 1
       
-    color = self.es_color(mano)
-    print(valores, "es Color?: ", color)
-  
+    print(valores)
+    if self.es_par(valores) > 0:
+      print(f"Hay {self.es_par(valores)} pares")
+
+    if self.es_color(mano):
+      print("Es color")
+
+    
+
+  def es_par(self,valores):
+    pares = 0
+    for i in range(len(valores)):
+      if valores[i] == 2:
+        pares += 1
+    return pares
+
   def es_color(self, mano):
     carta_anterior = mano[0].figura
     color = True
@@ -131,7 +144,6 @@ lalo.imprimir_mano()
 
 print(ranking[1])
 
-juego.evaluar_mano([Carta(1, "Corazones"), Carta(1, "Corazones"), Carta(1, "Corazones"), Carta(1, "Corazones"), Carta(1, "Corazones")])
 juego.evaluar_mano(lalo.mano)
 
 
